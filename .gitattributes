@@ -1,0 +1,4 @@
+# Keep LF everywhere: shell scripts and Drupal coding standards need it.
+* text=auto eol=lf
+*.png binary
+*.gz binary
