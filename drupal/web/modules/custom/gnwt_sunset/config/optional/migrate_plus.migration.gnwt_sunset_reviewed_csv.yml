@@ -1,0 +1,54 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - gnwt_sunset
+id: gnwt_sunset_reviewed_csv
+label: 'Reviewed mappings from a spreadsheet'
+migration_group: null
+migration_tags:
+  - gnwt_sunset
+source:
+  plugin: csv
+  # Content teams often review in a spreadsheet: export it as CSV with the
+  # columns legacy_url,target_url,review (approved or gone) and place it here.
+  path: 'public://gnwt_sunset/reviewed_mappings.csv'
+  ids:
+    - legacy_url
+process:
+  id:
+    -
+      plugin: gnwt_sunset_url_hash
+      source: legacy_url
+    -
+      plugin: entity_lookup
+      entity_type: sunset_url
+      value_key: url_hash
+      access_check: false
+  url: legacy_url
+  target_url:
+    plugin: skip_on_empty
+    method: process
+    source: target_url
+  review:
+    plugin: static_map
+    source: review
+    map:
+      approved: approved
+      gone: gone
+    default_value: pending
+  method:
+    plugin: default_value
+    default_value: manual
+  confidence:
+    plugin: default_value
+    default_value: 1
+destination:
+  plugin: 'entity:sunset_url'
+  overwrite_properties:
+    - target_url
+    - review
+    - method
+    - confidence
+migration_dependencies: {  }

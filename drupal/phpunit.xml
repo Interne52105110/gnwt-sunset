@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Unit and kernel tests of the custom modules. Functional tests are not used. -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="web/core/tests/bootstrap.php"
+         colors="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         cacheResult="false"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd">
+  <php>
+    <ini name="error_reporting" value="32767"/>
+    <ini name="memory_limit" value="-1"/>
+    <env name="SIMPLETEST_DB" value="sqlite://localhost/sites/default/files/.ht.test.sqlite" force="false"/>
+    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value=""/>
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="ignoreFile=web/core/.deprecation-ignore.txt"/>
+  </php>
+  <testsuites>
+    <testsuite name="gnwt_sunset">
+      <directory>web/modules/custom/gnwt_sunset/tests/src</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

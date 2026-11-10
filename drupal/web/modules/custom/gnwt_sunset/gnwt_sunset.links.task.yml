@@ -1,0 +1,9 @@
+gnwt_sunset.settings:
+  title: Settings
+  route_name: gnwt_sunset.settings
+  base_route: gnwt_sunset.settings
+gnwt_sunset.import:
+  title: 'Import data'
+  route_name: gnwt_sunset.import
+  base_route: gnwt_sunset.settings
+  weight: 10

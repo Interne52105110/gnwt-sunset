@@ -1,0 +1,50 @@
+services:
+  logger.channel.gnwt_sunset:
+    parent: logger.channel_base
+    arguments: ['gnwt_sunset']
+
+  gnwt_sunset.url_normalizer:
+    class: Drupal\gnwt_sunset\UrlNormalizer
+    arguments: ['@transliteration']
+  Drupal\gnwt_sunset\UrlNormalizer: '@gnwt_sunset.url_normalizer'
+
+  gnwt_sunset.http:
+    class: Drupal\gnwt_sunset\Http\PoliteClient
+    arguments: ['@http_client', '@config.factory', '@datetime.time', '@logger.channel.gnwt_sunset']
+  Drupal\gnwt_sunset\Http\PoliteClient: '@gnwt_sunset.http'
+
+  gnwt_sunset.sitemap_importer:
+    class: Drupal\gnwt_sunset\Import\SitemapImporter
+    arguments: ['@gnwt_sunset.http', '@gnwt_sunset.url_normalizer', '@entity_type.manager', '@database', '@config.factory']
+  Drupal\gnwt_sunset\Import\SitemapImporter: '@gnwt_sunset.sitemap_importer'
+
+  gnwt_sunset.wayback_importer:
+    class: Drupal\gnwt_sunset\Import\WaybackImporter
+    arguments: ['@gnwt_sunset.http', '@gnwt_sunset.url_normalizer', '@entity_type.manager', '@database']
+  Drupal\gnwt_sunset\Import\WaybackImporter: '@gnwt_sunset.wayback_importer'
+
+  gnwt_sunset.matcher:
+    class: Drupal\gnwt_sunset\Matching\Matcher
+    arguments: ['@entity_type.manager', '@database', '@config.factory', '@gnwt_sunset.url_normalizer']
+  Drupal\gnwt_sunset\Matching\Matcher: '@gnwt_sunset.matcher'
+
+  gnwt_sunset.checker:
+    class: Drupal\gnwt_sunset\LiveChecker
+    arguments: ['@gnwt_sunset.http', '@entity_type.manager', '@database', '@datetime.time']
+  Drupal\gnwt_sunset\LiveChecker: '@gnwt_sunset.checker'
+
+  gnwt_sunset.resolver:
+    class: Drupal\gnwt_sunset\Redirect\Resolver
+    arguments: ['@gnwt_sunset.url_normalizer', '@database', '@config.factory']
+  Drupal\gnwt_sunset\Redirect\Resolver: '@gnwt_sunset.resolver'
+
+  gnwt_sunset.legacy_host_subscriber:
+    class: Drupal\gnwt_sunset\EventSubscriber\LegacyHostSubscriber
+    arguments: ['@gnwt_sunset.resolver', '@config.factory']
+    tags:
+      - { name: event_subscriber }
+
+  gnwt_sunset.data_package:
+    class: Drupal\gnwt_sunset\Package\DataPackage
+    arguments: ['@database', '@uuid']
+  Drupal\gnwt_sunset\Package\DataPackage: '@gnwt_sunset.data_package'

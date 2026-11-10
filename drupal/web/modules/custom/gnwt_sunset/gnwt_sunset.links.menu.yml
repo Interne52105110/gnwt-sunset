@@ -1,0 +1,20 @@
+gnwt_sunset.settings:
+  title: 'Legacy site sunset toolkit'
+  description: 'Legacy hosts, matching thresholds, crawl politeness and fallbacks.'
+  route_name: gnwt_sunset.settings
+  parent: system.admin_config_search
+gnwt_sunset.public.overview:
+  title: Overview
+  route_name: '<front>'
+  menu_name: main
+  weight: 0
+gnwt_sunset.public.try:
+  title: 'Try a legacy URL'
+  route_name: gnwt_sunset.try
+  menu_name: main
+  weight: 10
+gnwt_sunset.public.mappings:
+  title: 'Suggested mappings'
+  route_name: view.gnwt_sunset_review.public
+  menu_name: main
+  weight: 20

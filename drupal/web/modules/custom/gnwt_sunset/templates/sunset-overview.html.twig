@@ -1,0 +1,178 @@
+{#
+/**
+ * @file
+ * Public overview of the demo.
+ *
+ * Available variables:
+ * - stats: numbers (targets, legacy, files, suggested, suggested_pct, high,
+ *   approved, indigenous, indigenous_matched, hosts).
+ * - hosts: one row per legacy host (host, total, files, suggested, high).
+ * - example: a real mapping (old, new, method, confidence) or NULL.
+ * - examples: legacy URLs to try.
+ * - try_url: path of the "Try a legacy URL" page.
+ * - mappings_url: path of the public list of mappings.
+ */
+#}
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container">
+    <p class="hero__eyebrow">{{ 'Drupal 11 · GNWT.ca case study'|t }}</p>
+    <h1 id="hero-title">{{ 'Ten old websites. Thousands of links.'|t }} <em>{{ 'Not one dead end.'|t }}</em></h1>
+    <p class="hero__lead">{{ 'In September 2026, GNWT.ca replaced more than ten gov.nt.ca department sites. Their links live on in bookmarks, PDFs, emails and search results. This toolkit finds the new home of every old URL, lets editors confirm it, and answers the old addresses with the right redirect.'|t }}</p>
+
+    <form class="hero__try" action="{{ try_url }}" method="get" role="search">
+      <label for="hero-url">{{ 'Paste an old gov.nt.ca address and see where a resident would land'|t }}</label>
+      <div class="hero__try-row">
+        <input id="hero-url" name="url" type="url" required placeholder="https://www.hss.gov.nt.ca/en/services/…" autocomplete="off">
+        <button type="submit">{{ 'Where would it go?'|t }}</button>
+      </div>
+    </form>
+    {% if examples %}
+      <ul class="hero__examples">
+        <li><span>{{ 'Try:'|t }}</span></li>
+        {% for item in examples %}
+          <li><a href="{{ try_url }}?url={{ item.url|url_encode }}">{{ item.label }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</section>
+
+<section class="stats" aria-label="{{ 'Key numbers'|t }}">
+  <div class="container">
+    <ul class="stats__grid">
+      <li class="stat">
+        <span class="stat__value">{{ stats.legacy|number_format }}</span>
+        <span class="stat__label">{{ 'legacy URLs found on the health site alone'|t }}</span>
+      </li>
+      <li class="stat">
+        <span class="stat__value">{{ stats.suggested_pct }}%</span>
+        <span class="stat__label">{{ 'already have a suggested GNWT.ca page'|t }}</span>
+        <span class="stat__bar" aria-hidden="true"><span style="width: {{ stats.suggested_pct }}%"></span></span>
+      </li>
+      <li class="stat">
+        <span class="stat__value">{{ stats.targets|number_format }}</span>
+        <span class="stat__label">{{ 'GNWT.ca and gtno.ca pages indexed'|t }}</span>
+      </li>
+      <li class="stat">
+        <span class="stat__value">{{ stats.indigenous|number_format }}</span>
+        <span class="stat__label">{{ 'documents in Indigenous languages, @matched already matched'|t({'@matched': stats.indigenous_matched|number_format}) }}</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+{% if example %}
+<section class="section" aria-labelledby="journey-title">
+  <div class="container">
+    <div class="section__head">
+      <span class="section__kicker">{{ 'One URL, start to finish'|t }}</span>
+      <h2 id="journey-title">{{ 'How an old link finds its new home'|t }}</h2>
+      <p>{{ 'Small pages were often merged into bigger ones on GNWT.ca. When a page has no twin, the toolkit suggests the page it was merged into, and asks a human to confirm.'|t }}</p>
+    </div>
+    <div class="journey">
+      <div class="journey__card">
+        <span class="journey__label">{{ 'Legacy URL'|t }}</span>
+        <span class="journey__url journey__url--old">{{ example.old }}</span>
+      </div>
+      <div class="journey__arrow" aria-hidden="true">→</div>
+      <div class="journey__card journey__card--decision">
+        <span class="journey__label">{{ 'Decision'|t }}</span>
+        <ul class="journey__facts">
+          <li>{{ 'Method:'|t }} {{ example.method }}</li>
+          <li>{{ 'Confidence:'|t }} {{ example.confidence }}</li>
+          <li>{{ 'Until reviewed: temporary 302 to a search'|t }}</li>
+          <li>{{ 'Once approved: permanent 301'|t }}</li>
+        </ul>
+      </div>
+      <div class="journey__arrow" aria-hidden="true">→</div>
+      <div class="journey__card">
+        <span class="journey__label">{{ 'GNWT.ca page'|t }}</span>
+        <a class="journey__url" href="{{ example.new }}">{{ example.new }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section section--alt" aria-labelledby="steps-title">
+  <div class="container">
+    <div class="section__head">
+      <span class="section__kicker">{{ 'Method'|t }}</span>
+      <h2 id="steps-title">{{ 'Five steps, no load on the old servers'|t }}</h2>
+      <p>{{ 'The legacy sites publish no sitemap and ask crawlers for ten seconds between requests. Everything that can be done without touching them, is.'|t }}</p>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <h3>{{ 'Read the new site'|t }}</h3>
+        <p>{{ 'Every GNWT.ca and gtno.ca page from the XML sitemap, with its English/French pair.'|t }}</p>
+      </li>
+      <li class="step">
+        <h3>{{ 'List the old URLs'|t }}</h3>
+        <p>{{ 'The addresses people really used, from the Internet Archive index: zero requests to gov.nt.ca.'|t }}</p>
+      </li>
+      <li class="step">
+        <h3>{{ 'Suggest a match'|t }}</h3>
+        <p>{{ 'Same words in any order first, then rare words weigh more. French with French, documents with resources.'|t }}</p>
+      </li>
+      <li class="step">
+        <h3>{{ 'Let editors decide'|t }}</h3>
+        <p>{{ 'A review screen in the Drupal admin: approve in bulk, correct, or mark as gone. Human decisions are never overwritten.'|t }}</p>
+      </li>
+      <li class="step">
+        <h3>{{ 'Answer the old hosts'|t }}</h3>
+        <p>{{ 'Before routing: 301 for approved mappings, temporary 302 to a search for the rest. Nobody lands on a 404.'|t }}</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+{% if hosts %}
+<section class="section section--tight" aria-labelledby="hosts-title">
+  <div class="container">
+    <div class="section__head">
+      <span class="section__kicker">{{ 'Progress'|t }}</span>
+      <h2 id="hosts-title">{{ 'Legacy sites inventoried so far'|t }}</h2>
+      <p>{{ 'Health and Social Services is the first site processed; the same commands run for the other departments.'|t }} <a href="{{ mappings_url }}">{{ 'Browse every suggested mapping'|t }}</a>.</p>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th scope="col">{{ 'Legacy site'|t }}</th>
+          <th scope="col">{{ 'URLs'|t }}</th>
+          <th scope="col">{{ 'Documents'|t }}</th>
+          <th scope="col">{{ 'Suggested page'|t }}</th>
+          <th scope="col">{{ 'High confidence'|t }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in hosts %}
+          <tr>
+            <td class="mono">{{ row.host }}</td>
+            <td>{{ row.total|number_format }}</td>
+            <td>{{ row.files|number_format }}</td>
+            <td>{{ row.suggested|number_format }} ({{ row.pct }}%)</td>
+            <td>{{ row.high|number_format }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+<section class="section section--alt" aria-labelledby="quality-title">
+  <div class="container">
+    <div class="section__head">
+      <span class="section__kicker">{{ 'Built like production'|t }}</span>
+      <h2 id="quality-title">{{ 'Small, tested, standard Drupal'|t }}</h2>
+    </div>
+    <ul class="quality">
+      <li><div><strong>{{ 'Drupal 11.4 on PHP 8.5'|t }}</strong><span>{{ 'Entities, Views, actions, Migrate API, Batch API, Drush commands.'|t }}</span></div></li>
+      <li><div><strong>{{ 'Automated tests'|t }}</strong><span>{{ 'Unit and kernel tests, including a real request on a legacy host name.'|t }}</span></div></li>
+      <li><div><strong>{{ 'Continuous integration'|t }}</strong><span>{{ 'Drupal coding standards, composer audit, PHP 8.3 to 8.5.'|t }}</span></div></li>
+      <li><div><strong>{{ 'Polite by design'|t }}</strong><span>{{ 'robots.txt honoured, one request per host per delay, stops after repeated server errors.'|t }}</span></div></li>
+      <li><div><strong>{{ 'Accessible'|t }}</strong><span>{{ 'WCAG 2.1 AA contrast, keyboard focus, no motion when reduced motion is requested.'|t }}</span></div></li>
+      <li><div><strong>{{ 'Respectful of visitors'|t }}</strong><span>{{ 'No cookies, no tracking, no external fonts or scripts.'|t }}</span></div></li>
+    </ul>
+  </div>
+</section>

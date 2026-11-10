@@ -1,0 +1,40 @@
+{#
+/**
+ * @file
+ * Result of "Try a legacy URL".
+ *
+ * Available variables:
+ * - url: the URL that was tried.
+ * - status: 301, 302 or NULL when the host is not a legacy host.
+ * - destination: where the request would go, or NULL.
+ * - explanation: why.
+ * - suggestion: stored suggestion (url, method, confidence, review) or NULL.
+ */
+#}
+<section class="result" aria-live="polite" aria-labelledby="result-title">
+  <div class="result__head">
+    <h2 id="result-title" class="visually-hidden">{{ 'Result'|t }}</h2>
+    {% if status == 301 %}
+      <span class="badge badge--301">301 · {{ 'Permanent redirect'|t }}</span>
+    {% elseif status == 302 %}
+      <span class="badge badge--302">302 · {{ 'Temporary redirect'|t }}</span>
+    {% else %}
+      <span class="badge badge--none">{{ 'No redirect'|t }}</span>
+    {% endif %}
+  </div>
+  <div class="result__body">
+    <dl class="result__flow">
+      <dt>{{ 'Legacy URL'|t }}</dt>
+      <dd>{{ url }}</dd>
+      {% if destination %}
+        <dt>{{ 'Resident lands on'|t }}</dt>
+        <dd><a href="{{ destination }}">{{ destination }}</a></dd>
+      {% endif %}
+      {% if suggestion %}
+        <dt>{{ 'Suggested GNWT.ca page, waiting for review'|t }}</dt>
+        <dd><a href="{{ suggestion.url }}">{{ suggestion.url }}</a><br>{{ 'Method:'|t }} {{ suggestion.method }} · {{ 'confidence'|t }} {{ suggestion.confidence }} · {{ 'review:'|t }} {{ suggestion.review }}</dd>
+      {% endif %}
+    </dl>
+    <p class="result__note">{{ explanation }}</p>
+  </div>
+</section>

@@ -1,0 +1,84 @@
+name: CI/CD
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Redeploy even if no file changed (rebuilds caches, runs updates)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: drupal
+    strategy:
+      matrix:
+        php: ['8.3', '8.4', '8.5']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: gd, pdo_sqlite, intl
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Composer security audit
+        run: composer audit
+
+      - name: Drupal coding standards
+        run: vendor/bin/phpcs --standard=Drupal,DrupalPractice --extensions=php,module,inc,install,yml,profile web/modules/custom web/profiles/custom web/themes/custom ../deploy
+
+      - name: Unit and kernel tests
+        env:
+          SIMPLETEST_DB: 'sqlite://localhost/sites/default/files/.ht.test.sqlite'
+        run: |
+          mkdir -p web/sites/default/files web/sites/simpletest
+          vendor/bin/phpunit -c phpunit.xml web/modules/custom/gnwt_sunset/tests
+
+  deploy:
+    name: Deploy to sunset.erwanbargain.com
+    needs: test
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    # One deployment at a time; a new push waits for the running one.
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    env:
+      SITE_URL: https://sunset.erwanbargain.com
+    steps:
+      - uses: actions/checkout@v4
+
+      # Same PHP as the server (see deploy/.ovhconfig).
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: gd, intl, sodium, zip, curl
+          coverage: none
+          tools: composer:v2
+
+      - name: Build the release
+        run: bash deploy/build-dist.sh build/dist
+
+      - name: Send changed files, run updates, rebuild caches
+        env:
+          DEPLOY_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          DEPLOY_COMMIT: ${{ github.sha }}
+        run: php deploy/push.php build/dist "$SITE_URL/_deploy.php" ${{ inputs.force && '--force' || '' }}
+
+      - name: Smoke test the live site
+        run: php deploy/smoke-test.php "$SITE_URL"

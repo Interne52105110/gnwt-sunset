@@ -1,0 +1,10 @@
+administer gnwt sunset:
+  title: 'Administer the sunset toolkit'
+  description: 'Change legacy hosts, matching thresholds, crawl settings and fallbacks; import data packages.'
+  restrict access: true
+review gnwt sunset mappings:
+  title: 'Review legacy URL mappings'
+  description: 'Approve, correct or reject the GNWT.ca page suggested for each legacy URL.'
+access sunset demo:
+  title: 'View the public demo'
+  description: 'Read-only overview, list of legacy URLs and the "Try a legacy URL" form.'

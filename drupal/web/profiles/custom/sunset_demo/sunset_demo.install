@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Install hooks of the sunset toolkit demo profile.
+ */
+
+declare(strict_types=1);
+
+use Drupal\user\Entity\Role;
+
+/**
+ * Implements hook_install().
+ */
+function sunset_demo_install(): void {
+  $config = \Drupal::configFactory();
+  $config->getEditable('system.theme')
+    ->set('default', 'sunset_theme')
+    ->set('admin', 'claro')
+    ->save(TRUE);
+  $config->getEditable('system.site')
+    ->set('page.front', '/sunset')
+    ->save(TRUE);
+  // A public demo must not collect accounts.
+  $config->getEditable('user.settings')
+    ->set('register', 'admin_only')
+    ->save(TRUE);
+  $config->getEditable('system.logging')
+    ->set('error_level', 'hide')
+    ->save(TRUE);
+  // The entity API is always loaded; user.module may not be at this point.
+  foreach (['anonymous', 'authenticated'] as $rid) {
+    Role::load($rid)?->grantPermission('access sunset demo')->save();
+  }
+}
+
+/**
+ * Installs the Sunset theme and makes it the default theme.
+ */
+function sunset_demo_update_11001(): string {
+  \Drupal::service('theme_installer')->install(['sunset_theme']);
+  \Drupal::configFactory()->getEditable('system.theme')
+    ->set('default', 'sunset_theme')
+    ->save(TRUE);
+  return 'Sunset theme installed and set as the default theme.';
+}

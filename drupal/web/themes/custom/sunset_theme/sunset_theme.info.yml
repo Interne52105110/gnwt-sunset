@@ -1,0 +1,43 @@
+name: Sunset
+type: theme
+'base theme': false
+description: 'Theme of the Legacy Site Sunset Toolkit demo: civic, fast, accessible, no external assets.'
+core_version_requirement: ^11
+generator: 'starterkit_theme:11.4.12'
+logo: logo.svg
+# No "favicon" feature: the SVG icon is declared in html.html.twig.
+features:
+  - logo
+  - name
+  - slogan
+  - node_user_picture
+  - comment_user_picture
+  - comment_user_verification
+regions:
+  primary_menu: 'Primary menu'
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  footer: Footer
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+libraries:
+  - core/normalize
+  - sunset_theme/base
+  - sunset_theme/messages
+  - sunset_theme/global
+libraries-extend:
+  user/drupal.user:
+    - sunset_theme/user
+  core/drupal.dropbutton:
+    - sunset_theme/dropbutton
+  core/drupal.dialog:
+    - sunset_theme/dialog
+  file/drupal.file:
+    - sunset_theme/file
+  core/drupal.item-list:
+    - sunset_theme/item-list
+  core/drupal.progress:
+    - sunset_theme/progress
+  core/drupal.tablesort:
+    - sunset_theme/drupal.tablesort

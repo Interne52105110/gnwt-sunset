@@ -1,0 +1,19 @@
+Shared hosting (OVHcloud) sets opcache.restrict_api to its own status script,
+so opcache_invalidate() raises "Zend OPcache API is restricted" on every call.
+Drupal 11.4 calls it for each PHP file the hook collector reads; the installer
+prints every warning, sends headers early and fails to start its session.
+Invalidation cannot happen on such hosts anyway: silence the warning only.
+
+--- a/core/lib/Drupal/Component/Utility/OpCodeCache.php
++++ b/core/lib/Drupal/Component/Utility/OpCodeCache.php
+@@ -33,7 +33,9 @@
+ 
+     // Check if the Zend OPcache is enabled and if so invalidate the file.
+     if (function_exists('opcache_invalidate')) {
+-      opcache_invalidate($pathname, TRUE);
++      // Hosts that set opcache.restrict_api answer with a warning: there is
++      // nothing to invalidate from here, so the warning is suppressed.
++      @opcache_invalidate($pathname, TRUE);
+     }
+   }
+ 

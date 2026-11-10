@@ -1,0 +1,9 @@
+name: 'Legacy Site Sunset Toolkit'
+type: module
+description: 'Inventories legacy gov.nt.ca URLs, matches them to GNWT.ca pages, lets editors review each match and answers legacy hosts with 301 redirects.'
+package: 'Sunset toolkit'
+core_version_requirement: ^11
+configure: gnwt_sunset.settings
+dependencies:
+  - drupal:options
+  - drupal:views

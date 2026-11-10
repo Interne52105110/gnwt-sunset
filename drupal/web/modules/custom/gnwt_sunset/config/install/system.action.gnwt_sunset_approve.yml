@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - gnwt_sunset
+id: gnwt_sunset_approve
+label: 'Approve the suggested page (301)'
+type: sunset_url
+plugin: gnwt_sunset_approve
+configuration: {  }

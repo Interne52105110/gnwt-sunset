@@ -1,0 +1,58 @@
+{#
+/**
+ * @file
+ * Page layout of the Sunset theme: header, main content, footer.
+ */
+#}
+<div class="layout">
+  <header class="site-header" role="banner">
+    <div class="container site-header__inner">
+      <a href="{{ path('<front>') }}" class="brand" rel="home">
+        <svg class="brand__mark" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="brand-aurora" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#8ef0b0"/>
+              <stop offset="1" stop-color="#2ec4b6"/>
+            </linearGradient>
+          </defs>
+          <rect width="48" height="48" rx="12" fill="#0f2a3d"/>
+          <path d="M12 29a12 12 0 0 1 24 0z" fill="url(#brand-aurora)"/>
+          <path d="M8 29h32" stroke="#e8f3f4" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M15 36h15m0 0-3.5-3.2m3.5 3.2-3.5 3.2" stroke="#e8f3f4" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand__text">
+          <span class="brand__name">Sunset Toolkit</span>
+          <span class="brand__tag">{{ 'Legacy site retirement · independent demo'|t }}</span>
+        </span>
+      </a>
+      {% if page.primary_menu %}
+        <nav class="site-nav" aria-label="{{ 'Main navigation'|t }}">
+          {{ page.primary_menu }}
+        </nav>
+      {% endif %}
+    </div>
+  </header>
+
+  {% if page.highlighted %}
+    <div class="container site-messages">{{ page.highlighted }}</div>
+  {% endif %}
+
+  <main id="main-content" class="site-main" tabindex="-1">
+    {{ page.help }}
+    {{ page.content }}
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container site-footer__inner">
+      <div class="site-footer__about">
+        <p class="site-footer__title">Sunset Toolkit</p>
+        <p>{{ 'Independent demonstration project, not affiliated with the Government of the Northwest Territories. It reads public data only: the GNWT.ca sitemap and the Internet Archive index.'|t }}</p>
+      </div>
+      <div class="site-footer__built">
+        <p>{{ 'Built with Drupal 11 and PHP 8.5 by'|t }} <a href="https://erwanbargain.com">Erwan Bargain</a>.</p>
+        <p>{{ 'No cookies, no tracking, no external fonts for visitors.'|t }}</p>
+      </div>
+      {{ page.footer }}
+    </div>
+  </footer>
+</div>

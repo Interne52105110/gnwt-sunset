@@ -1,0 +1,30 @@
+legacy_hosts:
+  - gov.nt.ca
+  - hss.gov.nt.ca
+  - ece.gov.nt.ca
+  - eia.gov.nt.ca
+  - iti.gov.nt.ca
+  - maca.gov.nt.ca
+  - inf.gov.nt.ca
+  - nwthc.gov.nt.ca
+  - fin.gov.nt.ca
+  - justice.gov.nt.ca
+target_hosts:
+  -
+    host: gnwt.ca
+    langcode: en
+  -
+    host: gtno.ca
+    langcode: fr
+fallback:
+  en: 'https://gnwt.ca/search?keywords={keywords}'
+  fr: 'https://gtno.ca/search?keywords={keywords}'
+home:
+  en: 'https://gnwt.ca/'
+  fr: 'https://gtno.ca/'
+user_agent: 'gnwt-sunset-toolkit/0.1 (public URL inventory, low request rate)'
+min_delay: 1.0
+max_consecutive_errors: 3
+suggest_threshold: 0.6
+high_threshold: 0.85
+serve_high_confidence: false

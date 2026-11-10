@@ -1,0 +1,396 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - gnwt_sunset
+    - options
+    - user
+id: gnwt_sunset_review
+label: 'Legacy URLs'
+module: views
+description: 'Review queue: legacy gov.nt.ca URLs and the GNWT.ca page suggested for each.'
+tag: 'gnwt_sunset'
+base_table: sunset_url
+base_field: id
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      title: 'Legacy URLs'
+      access:
+        type: perm
+        options:
+          perm: 'review gnwt sunset mappings'
+      cache:
+        type: tag
+        options: {  }
+      query:
+        type: views_query
+        options: {  }
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Filter
+          reset_button: true
+          reset_button_label: Reset
+      pager:
+        type: full
+        options:
+          items_per_page: 50
+          offset: 0
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: true
+          summary: ''
+          order: desc
+          empty_table: true
+          default: confidence
+          columns:
+            sunset_url_bulk_form: sunset_url_bulk_form
+            url: url
+            target_url: target_url
+            confidence: confidence
+            method: method
+            review: review
+            live_status: live_status
+            edit_sunset_url: edit_sunset_url
+          info:
+            url:
+              sortable: true
+              default_sort_order: asc
+            confidence:
+              sortable: true
+              default_sort_order: desc
+            live_status:
+              sortable: true
+              default_sort_order: asc
+      row:
+        type: fields
+      fields:
+        sunset_url_bulk_form:
+          id: sunset_url_bulk_form
+          table: sunset_url
+          field: sunset_url_bulk_form
+          plugin_id: bulk_form
+          entity_type: sunset_url
+          label: ''
+          action_title: Action
+          include_exclude: exclude
+          selected_actions: {  }
+        url:
+          id: url
+          table: sunset_url
+          field: url
+          plugin_id: field
+          entity_type: sunset_url
+          entity_field: url
+          label: 'Legacy URL'
+          type: gnwt_sunset_compact_url
+          settings:
+            strip: host
+        target_url:
+          id: target_url
+          table: sunset_url
+          field: target_url
+          plugin_id: field
+          entity_type: sunset_url
+          entity_field: target_url
+          label: 'Suggested GNWT.ca page'
+          type: gnwt_sunset_compact_url
+          settings:
+            strip: scheme
+        confidence:
+          id: confidence
+          table: sunset_url
+          field: confidence
+          plugin_id: field
+          entity_type: sunset_url
+          entity_field: confidence
+          label: Confidence
+          type: gnwt_sunset_confidence
+          settings: {  }
+        method:
+          id: method
+          table: sunset_url
+          field: method
+          plugin_id: field
+          entity_type: sunset_url
+          entity_field: method
+          label: Method
+          type: gnwt_sunset_badge
+          settings: {  }
+        review:
+          id: review
+          table: sunset_url
+          field: review
+          plugin_id: field
+          entity_type: sunset_url
+          entity_field: review
+          label: Review
+          type: gnwt_sunset_badge
+          settings: {  }
+        live_status:
+          id: live_status
+          table: sunset_url
+          field: live_status
+          plugin_id: field
+          entity_type: sunset_url
+          entity_field: live_status
+          label: 'Legacy status'
+          type: number_integer
+          settings:
+            thousand_separator: ''
+            prefix_suffix: false
+        edit_sunset_url:
+          id: edit_sunset_url
+          table: sunset_url
+          field: edit_sunset_url
+          plugin_id: entity_link_edit
+          entity_type: sunset_url
+          label: ''
+          text: Review
+      filters:
+        host:
+          id: host
+          table: sunset_url
+          field: host
+          plugin_id: string
+          entity_type: sunset_url
+          entity_field: host
+          operator: '='
+          value: ''
+          exposed: true
+          expose:
+            operator_id: host_op
+            label: 'Legacy host'
+            identifier: host
+            remember_roles:
+              authenticated: authenticated
+        review:
+          id: review
+          table: sunset_url
+          field: review
+          plugin_id: list_field
+          entity_type: sunset_url
+          entity_field: review
+          operator: or
+          value: {  }
+          exposed: true
+          expose:
+            operator_id: review_op
+            label: Review
+            identifier: review
+            multiple: false
+            reduce: false
+        method:
+          id: method
+          table: sunset_url
+          field: method
+          plugin_id: list_field
+          entity_type: sunset_url
+          entity_field: method
+          operator: or
+          value: {  }
+          exposed: true
+          expose:
+            operator_id: method_op
+            label: Method
+            identifier: method
+            multiple: false
+            reduce: false
+        kind:
+          id: kind
+          table: sunset_url
+          field: kind
+          plugin_id: list_field
+          entity_type: sunset_url
+          entity_field: kind
+          operator: or
+          value: {  }
+          exposed: true
+          expose:
+            operator_id: kind_op
+            label: Kind
+            identifier: kind
+            multiple: false
+            reduce: false
+        confidence:
+          id: confidence
+          table: sunset_url
+          field: confidence
+          plugin_id: numeric
+          entity_type: sunset_url
+          entity_field: confidence
+          operator: '>='
+          value:
+            min: ''
+            max: ''
+            value: ''
+          exposed: true
+          expose:
+            operator_id: confidence_op
+            label: 'Minimum confidence'
+            identifier: min_confidence
+      sorts:
+        confidence:
+          id: confidence
+          table: sunset_url
+          field: confidence
+          plugin_id: standard
+          entity_type: sunset_url
+          entity_field: confidence
+          order: DESC
+        id:
+          id: id
+          table: sunset_url
+          field: id
+          plugin_id: standard
+          entity_type: sunset_url
+          entity_field: id
+          order: ASC
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          plugin_id: result
+          content: 'Displaying @start - @end of @total legacy URLs'
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          plugin_id: text_custom
+          empty: true
+          content: 'No legacy URL matches these filters. Run drush sunset:legacy and drush sunset:match first.'
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: 1
+    display_options:
+      path: admin/content/sunset
+      menu:
+        type: tab
+        title: 'Legacy URLs'
+        description: 'Review the GNWT.ca page suggested for each legacy URL.'
+        weight: 20
+        menu_name: admin
+        context: ''
+      display_extenders: {  }
+  public:
+    id: public
+    display_title: 'Public (read-only)'
+    display_plugin: page
+    position: 2
+    display_options:
+      title: 'Suggested mappings'
+      path: legacy-urls
+      access:
+        type: perm
+        options:
+          perm: 'access sunset demo'
+      defaults:
+        access: false
+        fields: false
+        style: false
+        row: false
+        title: false
+        empty: false
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          summary: ''
+          order: desc
+          empty_table: true
+          default: confidence
+          columns:
+            url: url
+            target_url: target_url
+            confidence: confidence
+            method: method
+            review: review
+          info:
+            url:
+              sortable: true
+              default_sort_order: asc
+            confidence:
+              sortable: true
+              default_sort_order: desc
+      row:
+        type: fields
+      fields:
+        url:
+          id: url
+          table: sunset_url
+          field: url
+          plugin_id: field
+          entity_type: sunset_url
+          entity_field: url
+          label: 'Legacy URL'
+          type: gnwt_sunset_compact_url
+          settings:
+            strip: host
+        target_url:
+          id: target_url
+          table: sunset_url
+          field: target_url
+          plugin_id: field
+          entity_type: sunset_url
+          entity_field: target_url
+          label: 'Suggested GNWT.ca page'
+          type: gnwt_sunset_compact_url
+          settings:
+            strip: scheme
+        confidence:
+          id: confidence
+          table: sunset_url
+          field: confidence
+          plugin_id: field
+          entity_type: sunset_url
+          entity_field: confidence
+          label: Confidence
+          type: gnwt_sunset_confidence
+          settings: {  }
+        method:
+          id: method
+          table: sunset_url
+          field: method
+          plugin_id: field
+          entity_type: sunset_url
+          entity_field: method
+          label: Method
+          type: gnwt_sunset_badge
+          settings: {  }
+        review:
+          id: review
+          table: sunset_url
+          field: review
+          plugin_id: field
+          entity_type: sunset_url
+          entity_field: review
+          label: Review
+          type: gnwt_sunset_badge
+          settings: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          plugin_id: text_custom
+          empty: true
+          content: 'No legacy URL matches these filters.'
+      display_extenders: {  }

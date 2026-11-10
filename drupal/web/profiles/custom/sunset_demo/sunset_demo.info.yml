@@ -1,0 +1,21 @@
+name: 'Sunset toolkit demo'
+type: profile
+description: 'Public demo of the Legacy Site Sunset Toolkit: Sunset theme for visitors, Claro for administrators, demo pages open to everyone.'
+core_version_requirement: ^11
+install:
+  - automated_cron
+  - block
+  - dblog
+  - dynamic_page_cache
+  - help
+  - options
+  - page_cache
+  - views
+  - migrate
+  - migrate_plus
+  - migrate_tools
+  - migrate_source_csv
+  - gnwt_sunset
+themes:
+  - sunset_theme
+  - claro

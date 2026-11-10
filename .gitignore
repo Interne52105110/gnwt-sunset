@@ -1,0 +1,27 @@
+# Raw downloads (sitemaps, archive listings): public data, but not ours to redistribute.
+data/raw/
+__pycache__/
+
+# Composer-managed code and Drupal scaffold files: rebuilt by `composer install`.
+drupal/vendor/
+drupal/web/*
+!drupal/web/modules/
+drupal/web/modules/*
+!drupal/web/modules/custom/
+!drupal/web/profiles/
+drupal/web/profiles/*
+!drupal/web/profiles/custom/
+!drupal/web/themes/
+drupal/web/themes/*
+!drupal/web/themes/custom/
+
+# Local environment (the SQLite database lives outside the web root).
+drupal/db/
+drupal/data/
+build/
+drupal/*.sqlite
+drupal/.phpunit.cache/
+.env
+
+# Local tooling.
+.claude/

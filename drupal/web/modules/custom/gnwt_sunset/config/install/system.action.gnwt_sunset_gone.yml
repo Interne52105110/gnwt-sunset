@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - gnwt_sunset
+id: gnwt_sunset_gone
+label: 'Mark as having no equivalent (search fallback)'
+type: sunset_url
+plugin: gnwt_sunset_gone
+configuration: {  }

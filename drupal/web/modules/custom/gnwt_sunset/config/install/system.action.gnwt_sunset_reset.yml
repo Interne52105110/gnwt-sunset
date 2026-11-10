@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - gnwt_sunset
+id: gnwt_sunset_reset
+label: 'Send back to review'
+type: sunset_url
+plugin: gnwt_sunset_reset
+configuration: {  }

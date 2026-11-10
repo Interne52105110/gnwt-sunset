@@ -1,0 +1,6 @@
+# Paths the receiver deletes on every deployment if they still exist on the
+# server: code that moved or was renamed outside the deployment manifest.
+# One path per line, relative to the project folder. Never web/sites.
+
+# The theme was first uploaded by hand to web/themes/; it now lives in custom/.
+web/themes/sunset_theme

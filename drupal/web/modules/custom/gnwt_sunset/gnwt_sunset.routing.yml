@@ -1,0 +1,31 @@
+gnwt_sunset.settings:
+  path: '/admin/config/search/gnwt-sunset'
+  defaults:
+    _form: '\Drupal\gnwt_sunset\Form\SettingsForm'
+    _title: 'Legacy site sunset toolkit'
+  requirements:
+    _permission: 'administer gnwt sunset'
+
+gnwt_sunset.import:
+  path: '/admin/config/search/gnwt-sunset/import'
+  defaults:
+    _form: '\Drupal\gnwt_sunset\Form\ImportForm'
+    _title: 'Import a data package'
+  requirements:
+    _permission: 'administer gnwt sunset'
+
+gnwt_sunset.overview:
+  path: '/sunset'
+  defaults:
+    _controller: '\Drupal\gnwt_sunset\Controller\OverviewController::page'
+    _title: 'Legacy Site Sunset Toolkit'
+  requirements:
+    _permission: 'access sunset demo'
+
+gnwt_sunset.try:
+  path: '/try'
+  defaults:
+    _form: '\Drupal\gnwt_sunset\Form\TryUrlForm'
+    _title: 'Try a legacy URL'
+  requirements:
+    _permission: 'access sunset demo'

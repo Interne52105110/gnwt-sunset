@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * Install and update functions for the GNWT sunset toolkit.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Adds parent-page matching: a field for the parent slug and a new method.
+ *
+ * Run "drush sunset:retokenize" then "drush sunset:match" afterwards.
+ */
+function gnwt_sunset_update_11001(): TranslatableMarkup {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+
+  if (!$manager->getFieldStorageDefinition('parent_tokens', 'sunset_url')) {
+    $field = BaseFieldDefinition::create('string')
+      ->setLabel(new TranslatableMarkup('Parent slug words'))
+      ->setDescription(new TranslatableMarkup('Used when a sub-page was merged into its parent on the new site.'))
+      ->setSetting('max_length', 1024);
+    $manager->installFieldStorageDefinition('parent_tokens', 'sunset_url', 'gnwt_sunset', $field);
+  }
+
+  $method = $manager->getFieldStorageDefinition('method', 'sunset_url');
+  $method->setSetting('allowed_values', [
+    'slug_exact' => 'Same slug',
+    'slug_fuzzy' => 'Similar slug',
+    'parent' => 'Parent page (content merged)',
+    'manual' => 'Set by an editor',
+    'none' => 'No candidate',
+  ]);
+  $manager->updateFieldStorageDefinition($method);
+
+  return new TranslatableMarkup('Parent-page matching added. Run drush sunset:retokenize, then drush sunset:match.');
+}
+
+/**
+ * Refreshes the review view: compact links, confidence bars and badges.
+ */
+function gnwt_sunset_update_11002(): TranslatableMarkup {
+  $source = new FileStorage(\Drupal::service('extension.list.module')->getPath('gnwt_sunset') . '/config/install');
+  $config = \Drupal::configFactory()->getEditable('views.view.gnwt_sunset_review');
+  $data = $source->read('views.view.gnwt_sunset_review');
+  // Keep the identity of the existing view.
+  $data['uuid'] = $config->get('uuid');
+  $data['_core'] = $config->get('_core');
+  $config->setData(array_filter($data, static fn ($value): bool => $value !== NULL))->save(TRUE);
+  return new TranslatableMarkup('Review view refreshed.');
+}
