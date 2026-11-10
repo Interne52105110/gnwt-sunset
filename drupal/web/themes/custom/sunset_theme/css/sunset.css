@@ -648,6 +648,11 @@ code,
   font-size: 0.92rem;
 }
 
+.quality-more {
+  margin: 1.25rem 0 0;
+  font-weight: 700;
+}
+
 /* Hosts table on the overview. */
 .data-table,
 .views-table {
