@@ -57,7 +57,7 @@ Spot checks during tuning showed most suggestions pointing to the right page. Th
 
 ## Quick start
 
-Requirements: PHP 8.3+ with `gd`, `pdo_sqlite` and `intl`, Composer 2.
+Requirements: PHP 8.4+ with `gd`, `pdo_sqlite` and `intl`, Composer 2.
 
 ```bash
 cd drupal
@@ -81,7 +81,7 @@ A standalone theme generated with Drupal's starterkit (`sunset_theme`): system f
 ## Quality
 
 - Unit tests for normalisation, scoring, robots.txt parsing and CDX paging; a kernel test runs the whole pipeline, including a real request on a legacy host name.
-- GitHub Actions: Drupal coding standards (`phpcs --standard=Drupal,DrupalPractice`), `composer audit`, PHPUnit on PHP 8.3, 8.4 and 8.5.
+- GitHub Actions: Drupal coding standards (`phpcs --standard=Drupal,DrupalPractice`), `composer audit`, PHPUnit on PHP 8.4 and 8.5 (the server runs 8.5).
 
 ## Continuous deployment
 

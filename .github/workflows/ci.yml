@@ -21,10 +21,11 @@ jobs:
       run:
         working-directory: drupal
     strategy:
+      fail-fast: false
       matrix:
-        php: ['8.3', '8.4', '8.5']
+        php: ['8.4', '8.5']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -70,7 +71,7 @@ jobs:
           if [ -n "$DEPLOY_PRIVATE_KEY" ]; then echo "ready=true" >> "$GITHUB_OUTPUT"
           else echo "::notice::No DEPLOY_PRIVATE_KEY secret: deployment skipped (see docs/deploy.md)."; fi
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: steps.key.outputs.ready == 'true'
 
       # Same PHP as the server (see deploy/.ovhconfig).
