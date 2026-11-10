@@ -61,10 +61,21 @@ jobs:
     env:
       SITE_URL: https://sunset.erwanbargain.com
     steps:
+      # Forks and fresh clones have no signing key: skip instead of failing.
+      - name: Check the signing key
+        id: key
+        env:
+          DEPLOY_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+        run: |
+          if [ -n "$DEPLOY_PRIVATE_KEY" ]; then echo "ready=true" >> "$GITHUB_OUTPUT"
+          else echo "::notice::No DEPLOY_PRIVATE_KEY secret: deployment skipped (see docs/deploy.md)."; fi
+
       - uses: actions/checkout@v4
+        if: steps.key.outputs.ready == 'true'
 
       # Same PHP as the server (see deploy/.ovhconfig).
       - uses: shivammathur/setup-php@v2
+        if: steps.key.outputs.ready == 'true'
         with:
           php-version: '8.5'
           extensions: gd, intl, sodium, zip, curl
@@ -72,13 +83,16 @@ jobs:
           tools: composer:v2
 
       - name: Build the release
+        if: steps.key.outputs.ready == 'true'
         run: bash deploy/build-dist.sh build/dist
 
       - name: Send changed files, run updates, rebuild caches
+        if: steps.key.outputs.ready == 'true'
         env:
           DEPLOY_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
           DEPLOY_COMMIT: ${{ github.sha }}
         run: php deploy/push.php build/dist "$SITE_URL/_deploy.php" ${{ inputs.force && '--force' || '' }}
 
       - name: Smoke test the live site
+        if: steps.key.outputs.ready == 'true'
         run: php deploy/smoke-test.php "$SITE_URL"
