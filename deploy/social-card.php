@@ -80,5 +80,4 @@ imagettftext($img, 24, 0, 82, $y + 14, $soft, $regular, $subtitle);
 imagettftext($img, 20, 0, 82, 585, $soft, $regular, $footer);
 
 imagepng($img, $out, 9);
-imagedestroy($img);
 echo "Written: $out\n";
